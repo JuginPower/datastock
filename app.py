@@ -8,7 +8,7 @@ app = Flask(__name__)
 def ask_data():
     from model import Indiz
     indiz_object = Indiz()
-    return str({"ids": indiz_object.get_ids(), "names": indiz_object.get_names()}), 201
+    return {"ids": indiz_object.get_ids(), "names": indiz_object.get_names()}, 201
 
 
 @app.post("/price")
