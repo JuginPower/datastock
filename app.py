@@ -6,15 +6,15 @@ app = Flask(__name__)
 
 @app.get("/indiz")
 def ask_data():
-    from modelstock import Indiz
+    from model import Indiz
     indiz_object = Indiz()
-    return str(indiz_object)
+    return str({"ids": indiz_object.get_ids(), "names": indiz_object.get_names()}), 201
 
 
 @app.post("/price")
 def add_price():
     if request.is_json:
-        from modelstock import Datamanager
+        from model import Datamanager
         dm = Datamanager()
         price = request.get_json()
         dm.query(f"INSERT INTO indiz_price (indiz_id, price, zeit) VALUES ({price['id']}, {price['price']}, {price['timestamp']}")
