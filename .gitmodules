@@ -1,0 +1,3 @@
+[submodule "modelstock"]
+	path = modelstock
+	url = https://github.com/JuginPower/modelstock.git
