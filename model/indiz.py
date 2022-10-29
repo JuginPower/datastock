@@ -21,7 +21,7 @@ class Indiz(Datamanager):
             for url in url_list:
                 tag = url_object.get_tag(url)
                 classname = url_object.get_classname(url)
-                item = {url: {'tag': tag, 'classname': classname}}
+                item = {'urlstring': url, 'tag': tag, 'classname': classname}
                 jsondata[indiz_id]['url'].append(item)
 
         return jsondata

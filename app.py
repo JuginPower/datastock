@@ -14,11 +14,12 @@ def ask_data():
 @app.post("/price")
 def add_price():
     if request.is_json:
-        from model import Datamanager
-        dm = Datamanager()
-        price = request.get_json()
-        dm.query(f"INSERT INTO indiz_price (indiz_id, price, zeit) VALUES ({price['id']}, {price['price']}, {price['timestamp']}")
-        return price, 201
+        from model import Price
+        price_request = request.get_json()
+        for item in price_request['item']:
+            price_object = Price(item['id'])
+            price_object + item['price']
+        return price_request, 201
     return {"error": "Request must be JSON"}, 415
 
 
