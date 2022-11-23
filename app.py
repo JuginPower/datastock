@@ -5,15 +5,21 @@ app = Flask(__name__)
 
 
 @app.get("/indiz")
-def ask_data():
+@app.get("/indiz/<int:id>")
+def ask_data(id=None):
     from model import Indiz
     indiz_object = Indiz()
-    return indiz_object.extract_json(), 201
+    if id:
+        all_data = indiz_object.extract_json()
+        return all_data[id], 201
+    else:
+        return indiz_object.extract_json(), 201
 
 
-@app.route("/price", methods=('GET', 'POST'))
-@app.route("/price/<int:id>", methods=('GET', 'POST'))
-def price(id=None):
+@app.post("/price")
+@app.get("/price/<int:id>")
+@app.get("/price/<int:id>/<int:amount>")
+def price(id=None, amount=None):
     from model import Price
     if request.method == 'POST':
         if request.is_json:
@@ -26,7 +32,10 @@ def price(id=None):
 
     elif request.method == 'GET':
         price_object = Price(id)
-        return {'Datum': price_object.get_dates(), 'Preis': price_object.get_closes()}, 201
+        if amount:
+            return {'Datum': price_object.get_dates(amount), 'Preis': price_object.get_closes(amount)}, 201
+        else:
+            return {'Datum': price_object.get_dates(), 'Preis': price_object.get_closes()}, 201
 
 
 if __name__ == '__main__':

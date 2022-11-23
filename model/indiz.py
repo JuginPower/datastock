@@ -39,13 +39,17 @@ class Price(Datamanager):
         super().__init__()
         self.fk_id = indiz_id
 
-    def get_dates(self):
+    def get_dates(self, amount=None):
+        if amount:
+            return [row[0] for row in self.select(f"SELECT zeit FROM indiz_price WHERE indiz_id={self.fk_id} ORDER BY id DESC limit {amount}")]
+        else:
+            return [row[0] for row in self.select(f"SELECT zeit FROM indiz_price WHERE indiz_id={self.fk_id}")]
 
-        return [row[0] for row in self.select(f"SELECT zeit FROM indiz_price WHERE indiz_id={self.fk_id}")]
-
-    def get_closes(self):
-
-        return [row[0] for row in self.select(f"SELECT price FROM indiz_price WHERE indiz_id={self.fk_id}")]
+    def get_closes(self, amount=None):
+        if amount:
+            return [row[0] for row in self.select(f"SELECT price FROM indiz_price WHERE indiz_id={self.fk_id} ORDER BY id DESC limit {amount}")]
+        else:
+            return [row[0] for row in self.select(f"SELECT price FROM indiz_price WHERE indiz_id={self.fk_id}")]
 
     def __add__(self, other):
 
