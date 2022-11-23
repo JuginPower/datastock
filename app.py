@@ -26,7 +26,7 @@ def price(id=None):
 
     elif request.method == 'GET':
         price_object = Price(id)
-        return {'Datum': price_object.get_dates(), 'Preis': price_object.get_closes()}
+        return {'Datum': price_object.get_dates(), 'Preis': price_object.get_closes()}, 201
 
 
 if __name__ == '__main__':
