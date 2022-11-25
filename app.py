@@ -9,11 +9,11 @@ app = Flask(__name__)
 def ask_data(id=None):
     from model import Indiz
     indiz_object = Indiz()
+    all_data = indiz_object.extract_json()
     if id:
-        all_data = indiz_object.extract_json()
         return all_data[id], 201
     else:
-        return indiz_object.extract_json(), 201
+        return all_data, 201
 
 
 @app.post("/price")
