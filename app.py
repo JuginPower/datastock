@@ -18,8 +18,8 @@ def ask_data(id=None):
 
 @app.post("/price")
 @app.get("/price/<int:id>")
-@app.get("/price/<int:id>/<int:amount>")
-def price(id=None, amount=None):
+@app.get("/price/<int:id>/<datestart>/<dateend>")
+def price(id=None, datestart=None, dateend=None):
     from model import Price
     if request.method == 'POST':
         if request.is_json:
@@ -31,11 +31,14 @@ def price(id=None, amount=None):
         return {"error": "Request must be JSON"}, 415
 
     elif request.method == 'GET':
-        price_object = Price(id)
-        if amount:
-            return {'Datum': price_object.get_dates(amount), 'Preis': price_object.get_closes(amount)}, 201
+        if id:
+            price_object = Price(id)
+            if datestart and dateend:
+                pass
+            else:
+                return {'Datum': price_object.get_dates(), 'Preis': price_object.get_closes()}, 201
         else:
-            return {'Datum': price_object.get_dates(), 'Preis': price_object.get_closes()}, 201
+            return {"error": "Bad Request"}, 400
 
 
 if __name__ == '__main__':
