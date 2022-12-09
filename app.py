@@ -15,11 +15,31 @@ def ask_data(id=None):
     else:
         return all_data, 201
 
+@app.get("/name")
+@app.get("/name/<int:id>")
+def ask_name(id=None):
+    from model import Indiz
+    indiz_object = Indiz()
+    if id:
+        return indiz_object.get_one_name(id), 201
+    elif not id:
+        return indiz_object.get_names(), 201
+
+
+@app.get("/id")
+@app.get("/id/<name>")
+def ask_id(name=None):
+    from model import Indiz
+    indiz_object = Indiz()
+    if name:
+        return str(indiz_object.get_one_id(name)), 201
+    elif not name:
+        return indiz_object.get_ids(), 201
+
 
 @app.post("/price")
 @app.get("/price/<int:id>")
-@app.get("/price/<int:id>/<datestart>/<dateend>")
-def price(id=None, datestart=None, dateend=None):
+def price(id=None):
     from model import Price
     if request.method == 'POST':
         if request.is_json:
@@ -33,12 +53,8 @@ def price(id=None, datestart=None, dateend=None):
     elif request.method == 'GET':
         if id:
             price_object = Price(id)
-            if datestart and dateend:
-                pass
-            else:
-                return {'Datum': price_object.get_dates(), 'Preis': price_object.get_closes()}, 201
-        else:
-            return {"error": "Bad Request"}, 400
+            return {'Datum': price_object.get_dates(), 'Preis': price_object.get_closes()}, 201
+        return {"error": "Bad Request"}, 400
 
 
 if __name__ == '__main__':
