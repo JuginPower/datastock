@@ -39,7 +39,8 @@ def ask_id(name=None):
 
 @app.post("/price")
 @app.get("/price/<int:id>")
-def price(id=None):
+@app.get("/price/<int:id>/<int:amount>")
+def price(id=None, amount=None):
     from model import Price
     if request.method == 'POST':
         if request.is_json:
@@ -53,6 +54,8 @@ def price(id=None):
     elif request.method == 'GET':
         if id:
             price_object = Price(id)
+            if amount:
+                return {'Datum': price_object.get_dates(amount), 'Preis': price_object.get_closes(amount)}, 201    
             return {'Datum': price_object.get_dates(), 'Preis': price_object.get_closes()}, 201
         return {"error": "Bad Request"}, 400
 
