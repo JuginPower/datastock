@@ -4,3 +4,4 @@
 *.txt
 *.log
 .python-version
+*.sock
