@@ -23,5 +23,5 @@ class Price(Datamanager):
     def __add__(self, other):
 
         rows_affected = self.query(f"INSERT INTO indiz_price (indiz_id, price, zeit) VALUES (%s, %s, %s)",
-                                   (self.fk_id, other, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+                                   (self.fk_id, other, round(datetime.now().timestamp())))
         return rows_affected
