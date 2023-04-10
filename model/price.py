@@ -1,5 +1,5 @@
 from datetime import datetime
-from model.datalayer import Datamanager
+from datalayer import Datamanager
 
 
 class Price(Datamanager):
@@ -21,7 +21,11 @@ class Price(Datamanager):
             return [row[0] for row in self.select(f"SELECT price FROM indiz_price WHERE indiz_id={self.fk_id}")]
 
     def __add__(self, other):
+        orig_float = self.select("SELECT price FROM `indiz_price` ORDER BY id DESC LIMIT 1;")[0][0]
 
-        rows_affected = self.query(f"INSERT INTO indiz_price (indiz_id, price, zeit) VALUES (%s, %s, %s)",
-                                   (self.fk_id, other, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-        return rows_affected
+        if other == orig_float:
+            return 0
+        else:
+            rows_affected = self.query(f"INSERT INTO indiz_price (indiz_id, price, zeit) VALUES (%s, %s, %s)",
+                                       (self.fk_id, other, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+            return rows_affected
