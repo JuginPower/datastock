@@ -1,5 +1,6 @@
 from datetime import datetime
 from datalayer import Datamanager
+from mysql.connector.errors import ProgrammingError
 
 
 class Price(Datamanager):
@@ -8,11 +9,25 @@ class Price(Datamanager):
         super().__init__()
         self.fk_id = indiz_id
 
+    def __get_previous(self, column):
+
+        all_data = []
+
+        for y in range(datetime.now().year-1, datetime.now().year-100, -1):
+            try:
+                data = self.select(f"SELECT {column} FROM indiz_price_{str(y)} WHERE indiz_id={self.fk_id}")
+            except ProgrammingError:
+                break
+            else:
+                all_data[:0] = data
+
+        return all_data
+
     def get_dates(self, amount=None):
         if amount:
             return [row[0] for row in self.select(f"SELECT zeit FROM indiz_price WHERE indiz_id={self.fk_id} ORDER BY id DESC limit {amount}")]
         else:
-            return [row[0] for row in self.select(f"SELECT zeit FROM indiz_price WHERE indiz_id={self.fk_id}")]
+            return self.__get_previous("zeit").extend([row[0] for row in self.select(f"SELECT zeit FROM indiz_price WHERE indiz_id={self.fk_id}")])
 
     def get_closes(self, amount=None):
         if amount:
