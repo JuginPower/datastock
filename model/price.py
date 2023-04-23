@@ -21,19 +21,30 @@ class Price(Datamanager):
             else:
                 all_data[:0] = data
 
-        return all_data
+        return [row[0] for row in all_data]
 
     def get_dates(self, amount=None):
+        column = "zeit"
+
         if amount:
-            return [row[0] for row in self.select(f"SELECT zeit FROM indiz_price WHERE indiz_id={self.fk_id} ORDER BY id DESC limit {amount}")]
+            return [row[0] for row in self.select(f"SELECT {column} FROM indiz_price WHERE indiz_id={self.fk_id} ORDER BY id DESC limit {amount}")]
         else:
-            return self.__get_previous("zeit").extend([row[0] for row in self.select(f"SELECT zeit FROM indiz_price WHERE indiz_id={self.fk_id}")])
+            pre_data = self.__get_previous(column)
+            current_data = [row[0] for row in self.select(f"SELECT {column} FROM indiz_price WHERE indiz_id={self.fk_id}")]
+            pre_data.extend(current_data)
+            return pre_data
 
     def get_closes(self, amount=None):
+        column = "price"
+
         if amount:
-            return [row[0] for row in self.select(f"SELECT price FROM indiz_price WHERE indiz_id={self.fk_id} ORDER BY id DESC limit {amount}")]
+            return [row[0] for row in self.select(f"SELECT {column} FROM indiz_price WHERE indiz_id={self.fk_id} ORDER BY id DESC limit {amount}")]
         else:
-            return [row[0] for row in self.select(f"SELECT price FROM indiz_price WHERE indiz_id={self.fk_id}")]
+            pre_data = self.__get_previous(column)
+            current_data = [row[0] for row in
+                            self.select(f"SELECT {column} FROM indiz_price WHERE indiz_id={self.fk_id}")]
+            pre_data.extend(current_data)
+            return pre_data
 
     def __add__(self, other):
         orig_float = self.select("SELECT price FROM `indiz_price` ORDER BY id DESC LIMIT 1;")[0][0]
