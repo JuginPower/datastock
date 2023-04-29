@@ -14,6 +14,7 @@ class CrawlerFloat(Crawler):
     def extract_data(self):
 
         float_number = None
+        float_numbers = []
         item_dict = self._download_data()
 
         if isinstance(item_dict, str):
@@ -22,13 +23,14 @@ class CrawlerFloat(Crawler):
         contents = self._wrap_data(item_dict['source'], item_dict['selector'])
 
         for tag in contents:
-            string_content = str(tag.attrs["data-inst-formatted"])
+            string_content = str(tag)
 
             if re.search(self._rule, string_content):
                 match = re.search(self._rule, string_content)
                 index_tuple = match.span()
                 preresult = string_content[index_tuple[0]:index_tuple[1]]
                 float_number = float(preresult.replace(".", "_").replace(",", "."))
+                float_numbers.append(float_number)
 
         return float_number
 
