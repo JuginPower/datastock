@@ -47,7 +47,7 @@ class Price(Datamanager):
             return pre_data
 
     def __add__(self, other):
-        orig_float = self.select("SELECT price FROM `indiz_price` ORDER BY id DESC LIMIT 1;")[0][0]
+        orig_float = self.select(f"SELECT price FROM `indiz_price` WHERE indiz_id={self.fk_id} ORDER BY id DESC LIMIT 1;")[0][0]
 
         if other == orig_float:
             return 0
