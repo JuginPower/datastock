@@ -4,7 +4,7 @@ from flask import Flask, request
 app = Flask(__name__)
 
 
-"""@app.get("/indiz")
+@app.get("/indiz")
 @app.get("/indiz/<int:id>")
 def ask_data(id=None):
     from model import Indiz
@@ -13,7 +13,8 @@ def ask_data(id=None):
     if id:
         return all_data[id], 201
     else:
-        return all_data, 201"""
+        return all_data, 201
+
 
 @app.get("/name")
 @app.get("/name/<int:id>")
