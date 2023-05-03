@@ -47,11 +47,18 @@ class Price(Datamanager):
             return pre_data
 
     def __add__(self, other):
-        orig_float = self.select(f"SELECT price FROM `indiz_price` WHERE indiz_id={self.fk_id} ORDER BY id DESC LIMIT 1;")[0][0]
-
-        if other == orig_float:
-            return 0
-        else:
+        try:
+            orig_float = self.select(f"SELECT price FROM `indiz_price` WHERE indiz_id={self.fk_id} ORDER BY id DESC LIMIT 1;")[0][0]
+        except IndexError as indexerr:
+            print(str(indexerr))
             rows_affected = self.query(f"INSERT INTO indiz_price (indiz_id, price, zeit) VALUES (%s, %s, %s)",
                                        (self.fk_id, other, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
             return rows_affected
+        
+        else:
+            if other == orig_float:
+                return 0
+            else:
+                rows_affected = self.query(f"INSERT INTO indiz_price (indiz_id, price, zeit) VALUES (%s, %s, %s)",
+                                        (self.fk_id, other, datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
+                return rows_affected
