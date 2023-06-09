@@ -25,9 +25,9 @@ def ask_name(id=None):
     from stockmodels import Indiz
     indiz_object = Indiz()
     if id:
-        return indiz_object.get_one_name(id), 201
+        return {"name": indiz_object.get_one_name(id)}, 201
     elif not id:
-        return indiz_object.get_names(), 201
+        return {"names": indiz_object.get_names()}, 201
 
 
 @app.get("/id")
@@ -36,9 +36,9 @@ def ask_id(name=None):
     from stockmodels import Indiz
     indiz_object = Indiz()
     if name:
-        return str(indiz_object.get_one_id(name)), 201
+        return {"id": indiz_object.get_one_id(name)}, 201
     elif not name:
-        return indiz_object.get_ids(), 201
+        return {"ids": indiz_object.get_ids()}, 201
 
 
 # @app.post("/price")
